@@ -385,6 +385,7 @@ const ClientLayout = () => {
 
 const ClientHome = () => {
   const [activeStores, setActiveStores] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch('/api/stores')
@@ -394,7 +395,8 @@ const ClientHome = () => {
           setActiveStores(data);
         }
       })
-      .catch(err => console.error('Error fetching stores:', err));
+      .catch(err => console.error('Error fetching stores:', err))
+      .finally(() => setLoading(false));
   }, []);
 
   return (
@@ -444,7 +446,20 @@ const ClientHome = () => {
             </p>
           </div>
 
-          {activeStores.length > 0 ? (
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="bg-surface border-2 border-border flex flex-col rounded-none animate-pulse">
+                  <div className="w-full h-56 bg-gray-200 border-b-2 border-border"></div>
+                  <div className="p-6 flex flex-col items-center w-full">
+                    <div className="h-6 bg-gray-200 rounded-md w-3/4 mb-4"></div>
+                    <div className="h-4 bg-gray-200 rounded-md w-1/2 mb-8"></div>
+                    <div className="h-12 bg-gray-200 rounded-md w-full mt-auto"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : activeStores.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {activeStores.map((store: any) => (
                 <div key={store.Id} className="bg-surface border-2 border-border flex flex-col group rounded-none">
