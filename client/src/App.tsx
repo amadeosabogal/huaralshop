@@ -1823,6 +1823,40 @@ const AdminInventory = () => {
 };
 
 
+const CurtainGridTransition = () => {
+  const [show, setShow] = useState(true);
+  const rows = 8;
+  const cols = 12;
+  
+  useEffect(() => {
+    const timer = setTimeout(() => setShow(false), 2000); 
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!show) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] pointer-events-none flex flex-col">
+      {Array.from({ length: rows }).map((_, r) => (
+        <div key={r} className="flex-1 flex w-full">
+          {Array.from({ length: cols }).map((_, c) => {
+            const delay = (r + c) * 0.04;
+            return (
+              <div 
+                key={c} 
+                className="flex-1 bg-primary border border-primary/20 origin-top"
+                style={{ 
+                  animation: `curtainFade 0.6s cubic-bezier(0.77, 0, 0.175, 1) ${delay + 0.1}s forwards`
+                }}
+              ></div>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 function App() {
   const [cart, setCart] = useState<any[]>([]);
   const [user, setUser] = useState<any>(() => {
@@ -1845,6 +1879,7 @@ function App() {
     <GoogleOAuthProvider clientId="397515038296-f42ihcc9djveoburhjhjbiu0ac53122g.apps.googleusercontent.com">
       <CartContext.Provider value={{ cart, setCart, addToCart, user, setUser, isAuthModalOpen, setIsAuthModalOpen }}>
         <Router>
+          <CurtainGridTransition />
         <Routes>
           {/* Client Routes */}
           <Route path="/" element={<ClientLayout />}>
